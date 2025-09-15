@@ -289,6 +289,24 @@
         .esoteric-info { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; margin-top: 15px; }
         .esoteric-item { background: rgba(0,0,0,0.3); padding: 8px; border-radius: 5px; }
         .esoteric-label { color: var(--gold); font-size: 0.9em; margin-bottom: 3px; }
+
+        /* Теги в модальном окне */
+        .modal-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            margin-top: 5px;
+        }
+        .modal-tag {
+            font-size: 10px;
+            padding: 2px 6px;
+            background: rgba(255, 215, 0, 0.15);
+            color: var(--gold);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 8px;
+            display: inline-block;
+            white-space: nowrap;
+        }
         
         /* Мобильная адаптация */
         @media (max-width: 768px) {
@@ -423,6 +441,12 @@
                 line-height: 1.2 !important;
             }
 
+            /* Теги в модальном окне для планшетов */
+            .modal-tag {
+                font-size: 9px !important;
+                padding: 1px 4px !important;
+            }
+
             /* Модальное окно */
             .modal-content {
                 margin: 2% auto;
@@ -554,6 +578,12 @@
                 font-size: 0.55em !important;
                 padding: 1px !important;
                 line-height: 1.1 !important;
+            }
+
+            /* Теги в модальном окне для телефонов */
+            .modal-tag {
+                font-size: 8px !important;
+                padding: 1px 3px !important;
             }
 
             /* Модальное окно для телефонов */
@@ -5147,8 +5177,8 @@
                 '<div class="esoteric-item"><div class="esoteric-label">Планета:</div>' + (channel.planet || 'Не указана') + '</div>' +
                 '<div class="esoteric-item"><div class="esoteric-label">Камень:</div>' + (channel.stone || 'Не указан') + '</div>' +
                 '</div></div>' +
-                '<div class="channel-section"><div class="section-title">Теги</div><div>' +
-                (channel.tags ? channel.tags.map(tag => '<span class="tag">' + tag + '</span>').join(' ') : 'Нет тегов') +
+                '<div class="channel-section"><div class="section-title">Теги</div><div class="modal-tags">' +
+                (channel.tags ? channel.tags.map(tag => '<span class="modal-tag">' + tag + '</span>').join(' ') : 'Нет тегов') +
                 '</div></div>';
             
             document.getElementById('modalBody').innerHTML = content;
