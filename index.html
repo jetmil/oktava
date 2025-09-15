@@ -313,23 +313,64 @@
                 border-radius: 8px;
             }
 
-            /* Матрица для планшетов */
-            .matrix-grid {
-                grid-template-columns: auto repeat(12, minmax(45px, 1fr));
-                padding: 10px;
-                gap: 1px;
+            /* Улучшенная матрица для планшетов */
+            .matrix-container {
+                width: 100%;
                 overflow-x: auto;
+                overflow-y: hidden;
+                -webkit-overflow-scrolling: touch;
+                border-radius: 10px;
+                background: rgba(0, 0, 0, 0.3);
+                padding: 5px;
+            }
+            .matrix-grid {
+                display: grid;
+                grid-template-columns: 40px repeat(12, 60px);
+                grid-template-rows: repeat(9, 60px);
+                gap: 2px;
+                padding: 10px;
+                min-width: 800px; /* Фиксированная минимальная ширина */
+                background: rgba(0, 0, 0, 0.7);
+                border-radius: 8px;
             }
             .cell {
-                height: 45px;
-                font-size: 10px;
-                min-height: 45px;
+                width: 60px;
+                height: 60px;
+                font-size: 9px;
                 padding: 2px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                position: relative;
+                border-radius: 4px;
             }
-            .element-symbol { font-size: 13px; }
-            .element-name { font-size: 8px; }
-            .channel-number { font-size: 7px; }
-            .channel-code { font-size: 6px; }
+            .element-symbol {
+                font-size: 12px;
+                font-weight: bold;
+                line-height: 1;
+                margin-bottom: 1px;
+            }
+            .element-name {
+                font-size: 7px;
+                line-height: 1;
+                margin-bottom: 2px;
+                text-align: center;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            .channel-number {
+                font-size: 6px;
+                line-height: 1;
+                margin-bottom: 1px;
+            }
+            .channel-code {
+                font-size: 5px;
+                line-height: 1;
+                text-align: center;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
 
             /* Модальное окно */
             .modal-content {
@@ -359,22 +400,67 @@
             .tags-grid { gap: 8px; }
 
             /* Компактная матрица для телефонов */
+            .matrix-container {
+                width: 100%;
+                overflow-x: auto;
+                overflow-y: hidden;
+                -webkit-overflow-scrolling: touch;
+                border-radius: 8px;
+                background: rgba(0, 0, 0, 0.3);
+                padding: 3px;
+            }
             .matrix-grid {
-                grid-template-columns: auto repeat(12, minmax(35px, 1fr));
-                padding: 5px;
+                display: grid;
+                grid-template-columns: 30px repeat(12, 50px);
+                grid-template-rows: repeat(9, 50px);
                 gap: 1px;
-                font-size: 8px;
+                padding: 5px;
+                min-width: 650px; /* Фиксированная ширина для горизонтальной прокрутки */
+                background: rgba(0, 0, 0, 0.7);
+                border-radius: 6px;
             }
             .cell {
-                height: 35px;
+                width: 50px;
+                height: 50px;
                 font-size: 8px;
-                min-height: 35px;
                 padding: 1px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                position: relative;
+                border-radius: 3px;
             }
-            .element-symbol { font-size: 10px; }
-            .element-name { font-size: 6px; }
-            .channel-number { font-size: 5px; }
-            .channel-code { font-size: 4px; }
+            .element-symbol {
+                font-size: 10px;
+                font-weight: bold;
+                line-height: 1;
+                margin-bottom: 1px;
+            }
+            .element-name {
+                font-size: 6px;
+                line-height: 1;
+                margin-bottom: 1px;
+                text-align: center;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                max-width: 100%;
+            }
+            .channel-number {
+                font-size: 5px;
+                line-height: 1;
+                margin-bottom: 1px;
+            }
+            .channel-code {
+                font-size: 4px;
+                line-height: 1;
+                text-align: center;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                max-width: 100%;
+            }
 
             /* Модальное окно для телефонов */
             .modal-content {
@@ -748,7 +834,9 @@
             </div>
         </div>
         
-        <div class="matrix-grid" id="matrixGrid"></div>
+        <div class="matrix-container">
+            <div class="matrix-grid" id="matrixGrid"></div>
+        </div>
     </div>
 
     <div id="channelModal" class="modal">
@@ -4977,67 +5065,86 @@
             clickedButton.classList.add('active');
         }
 
+        // Добавляем throttling для лучшей производительности
+        let filterTimeout;
         function filterByTag(tag, event) {
-            document.querySelectorAll('.tag').forEach(t => t.classList.remove('selected'));
-            // Находим правильный элемент тега (может быть кликнута внутренняя span)
-            let tagElement = event ? event.target : null;
-            if (tagElement && !tagElement.classList.contains('tag')) {
-                tagElement = tagElement.closest('.tag');
+            // Очищаем предыдущий таймер
+            if (filterTimeout) {
+                clearTimeout(filterTimeout);
             }
-            if (tagElement) tagElement.classList.add('selected');
-            
-            document.querySelectorAll('.cell:not(.header-cell)').forEach(cell => {
-                cell.classList.remove('highlighted');
-            });
-            
-            // Проверяем мастер-канал ЭФИР
-            if (tag === 'ЭФИР' || tag === 'мастер') {
-                const masterCell = document.querySelector('.master-channel');
-                if (masterCell) masterCell.classList.add('highlighted');
-                return;
-            }
-            
-            const allRows = [
-                channelsDatabase.master || [],
-                channelsDatabase.row1, channelsDatabase.row2, channelsDatabase.row3,
-                channelsDatabase.row4, channelsDatabase.row5, channelsDatabase.row6,
-                channelsDatabase.row7, channelsDatabase.row8, channelsDatabase.row9
-            ];
-            
-            allRows.forEach((row, rowIndex) => {
-                if (!row) return;
-                row.forEach((channel, colIndex) => {
-                    if (channel) {
-                        let hasTag = false;
-                        
-                        // Проверка в основных тегах (без учета регистра)
-                        if (channel.tags && channel.tags.some(t => t.toLowerCase() === tag.toLowerCase())) {
-                            hasTag = true;
+
+            // Выполняем фильтрацию с задержкой для лучшей производительности
+            filterTimeout = setTimeout(() => {
+                document.querySelectorAll('.tag').forEach(t => t.classList.remove('selected'));
+                // Находим правильный элемент тега (может быть кликнута внутренняя span)
+                let tagElement = event ? event.target : null;
+                if (tagElement && !tagElement.classList.contains('tag')) {
+                    tagElement = tagElement.closest('.tag');
+                }
+                if (tagElement) tagElement.classList.add('selected');
+
+                // Оптимизированное удаление подсветки
+                const highlightedCells = document.querySelectorAll('.cell.highlighted');
+                highlightedCells.forEach(cell => cell.classList.remove('highlighted'));
+
+                // Проверяем мастер-канал ЭФИР
+                if (tag === 'ЭФИР' || tag === 'мастер') {
+                    const masterCell = document.querySelector('.master-channel');
+                    if (masterCell) masterCell.classList.add('highlighted');
+                    return;
+                }
+
+                const allRows = [
+                    channelsDatabase.master || [],
+                    channelsDatabase.row1, channelsDatabase.row2, channelsDatabase.row3,
+                    channelsDatabase.row4, channelsDatabase.row5, channelsDatabase.row6,
+                    channelsDatabase.row7, channelsDatabase.row8, channelsDatabase.row9
+                ];
+
+                // Кэшируем элементы для улучшения производительности
+                const cellMap = new Map();
+
+                allRows.forEach((row, rowIndex) => {
+                    if (!row) return;
+                    row.forEach((channel, colIndex) => {
+                        if (channel) {
+                            let hasTag = false;
+                            const lowerTag = tag.toLowerCase();
+
+                            // Проверка в основных тегах (без учета регистра)
+                            if (channel.tags && channel.tags.some(t => t.toLowerCase() === lowerTag)) {
+                                hasTag = true;
+                            }
+
+                            // Проверка по химическому символу
+                            if (channel.el === tag) {
+                                hasTag = true;
+                            }
+
+                            // Проверка в life_situations (новые эзотерические теги)
+                            if (!hasTag && channel.life_situations && channel.life_situations.some(situation =>
+                                situation.toLowerCase().includes(lowerTag))) {
+                                hasTag = true;
+                            }
+
+                            // Проверка в функциях и описаниях
+                            if (!hasTag && channel.func && channel.func.toLowerCase().includes(lowerTag)) {
+                                hasTag = true;
+                            }
+
+                            if (hasTag) {
+                                const cellId = 'cell-' + rowIndex + '-' + colIndex;
+                                let cell = cellMap.get(cellId);
+                                if (!cell) {
+                                    cell = document.getElementById(cellId);
+                                    if (cell) cellMap.set(cellId, cell);
+                                }
+                                if (cell) cell.classList.add('highlighted');
+                            }
                         }
-                        
-                        // Проверка по химическому символу
-                        if (channel.el === tag) {
-                            hasTag = true;
-                        }
-                        
-                        // Проверка в life_situations (новые эзотерические теги)
-                        if (channel.life_situations && channel.life_situations.some(situation => 
-                            situation.toLowerCase().includes(tag.toLowerCase()))) {
-                            hasTag = true;
-                        }
-                        
-                        // Проверка в функциях и описаниях
-                        if (channel.func && channel.func.toLowerCase().includes(tag.toLowerCase())) {
-                            hasTag = true;
-                        }
-                        
-                        if (hasTag) {
-                            const cell = document.getElementById('cell-' + rowIndex + '-' + colIndex);
-                            if (cell) cell.classList.add('highlighted');
-                        }
-                    }
+                    });
                 });
-            });
+            }, 50); // 50мс задержка для предотвращения слишком частых обновлений
         }
 
         function clearFilter() {
