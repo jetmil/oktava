@@ -391,13 +391,15 @@
 
             /* Мастер-канал для планшетов */
             .master-section {
-                position: relative !important;
+                position: static !important;
                 z-index: 20 !important;
-                margin-bottom: 15px !important;
+                margin: 0 0 20px 0 !important;
                 background: linear-gradient(45deg, rgba(255,215,0,0.15), rgba(255,165,0,0.15)) !important;
                 border: 2px solid #FFD700 !important;
                 border-radius: 12px !important;
-                padding: 15px !important;
+                padding: 12px !important;
+                grid-column: 1 / -1 !important;
+                order: -1 !important;
             }
             .master-channel {
                 min-width: 100px !important;
@@ -412,6 +414,13 @@
             }
             .magic-trans {
                 font-size: 3px !important;
+            }
+
+            /* Заголовки для планшетов */
+            .header-cell {
+                font-size: 0.65em !important;
+                padding: 1px !important;
+                line-height: 1.2 !important;
             }
 
             /* Модальное окно */
@@ -515,13 +524,15 @@
 
             /* Мастер-канал для телефонов */
             .master-section {
-                position: relative !important;
+                position: static !important;
                 z-index: 25 !important;
-                margin-bottom: 12px !important;
+                margin: 0 0 15px 0 !important;
                 background: linear-gradient(45deg, rgba(255,215,0,0.2), rgba(255,165,0,0.2)) !important;
                 border: 2px solid #FFD700 !important;
                 border-radius: 10px !important;
-                padding: 12px !important;
+                padding: 10px !important;
+                grid-column: 1 / -1 !important;
+                order: -1 !important;
             }
             .master-channel {
                 min-width: 90px !important;
@@ -536,6 +547,13 @@
             }
             .magic-trans {
                 font-size: 2px !important;
+            }
+
+            /* Заголовки для телефонов */
+            .header-cell {
+                font-size: 0.55em !important;
+                padding: 1px !important;
+                line-height: 1.1 !important;
             }
 
             /* Модальное окно для телефонов */
@@ -5005,6 +5023,13 @@
                 content += createChannelTabs(channel, true);  // true для мастер-канала
                 
                 document.getElementById('modalBody').innerHTML = content;
+
+                // Сброс масштаба для мобильных устройств
+                if (/Mobi|Android/i.test(navigator.userAgent)) {
+                    const viewport = document.querySelector('meta[name=viewport]');
+                    viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
+                }
+
                 document.getElementById('channelModal').style.display = 'block';
                 return;
             }
@@ -5120,6 +5145,13 @@
                 '</div></div>';
             
             document.getElementById('modalBody').innerHTML = content;
+
+            // Сброс масштаба для мобильных устройств
+            if (/Mobi|Android/i.test(navigator.userAgent)) {
+                const viewport = document.querySelector('meta[name=viewport]');
+                viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
+            }
+
             document.getElementById('channelModal').style.display = 'block';
         }
         
