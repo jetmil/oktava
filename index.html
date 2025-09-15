@@ -237,13 +237,13 @@
         }
         .element-symbol { font-weight: bold; font-size: 16px; margin-bottom: 2px; }
         .element-name { font-size: 9px; margin-bottom: 4px; opacity: 0.8; }
-        .magic-word { 
-            font-size: 8px; color: var(--gold); font-weight: bold; 
+        .magic-word {
+            font-size: 6px; color: var(--gold); font-weight: bold;
             text-shadow: 0 0 3px rgba(255, 215, 0, 0.7);
             margin-top: 2px; line-height: 1;
         }
-        .magic-trans { 
-            font-size: 7px; color: rgba(255, 215, 0, 0.6); 
+        .magic-trans {
+            font-size: 5px; color: rgba(255, 215, 0, 0.6);
             font-style: italic; line-height: 1;
         }
         @keyframes pulse { 
@@ -365,7 +365,7 @@
                 margin-bottom: 1px;
             }
             .element-name {
-                font-size: 7px;
+                font-size: 8px;
                 line-height: 1;
                 margin-bottom: 1px;
                 text-align: center;
@@ -375,12 +375,12 @@
                 max-width: 100%;
             }
             .channel-number {
-                font-size: 6px;
+                font-size: 5px;
                 line-height: 1;
                 margin-bottom: 1px;
             }
             .channel-code {
-                font-size: 5px;
+                font-size: 4px;
                 line-height: 1;
                 text-align: center;
                 overflow: hidden;
@@ -403,6 +403,15 @@
                 min-width: 100px !important;
                 height: 70px !important;
                 font-size: 10px !important;
+            }
+
+            /* Оптимизированные размеры кодовых слов для планшетов */
+            .magic-word {
+                font-size: 4px !important;
+                margin-top: 1px !important;
+            }
+            .magic-trans {
+                font-size: 3px !important;
             }
 
             /* Модальное окно */
@@ -480,7 +489,7 @@
                 margin-bottom: 1px;
             }
             .element-name {
-                font-size: 6px;
+                font-size: 7px;
                 line-height: 1;
                 margin-bottom: 1px;
                 text-align: center;
@@ -490,12 +499,12 @@
                 max-width: 100%;
             }
             .channel-number {
-                font-size: 5px;
+                font-size: 4px;
                 line-height: 1;
                 margin-bottom: 1px;
             }
             .channel-code {
-                font-size: 4px;
+                font-size: 3px;
                 line-height: 1;
                 text-align: center;
                 overflow: hidden;
@@ -518,6 +527,15 @@
                 min-width: 90px !important;
                 height: 60px !important;
                 font-size: 9px !important;
+            }
+
+            /* Оптимизированные размеры кодовых слов для телефонов */
+            .magic-word {
+                font-size: 3px !important;
+                margin-top: 1px !important;
+            }
+            .magic-trans {
+                font-size: 2px !important;
             }
 
             /* Модальное окно для телефонов */
