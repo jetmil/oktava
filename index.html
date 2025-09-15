@@ -5024,10 +5024,17 @@
                 
                 document.getElementById('modalBody').innerHTML = content;
 
-                // Сброс масштаба для мобильных устройств
-                if (/Mobi|Android/i.test(navigator.userAgent)) {
+                // Сброс масштаба для мобильных устройств (универсальный метод)
+                if (window.innerWidth <= 768) {
                     const viewport = document.querySelector('meta[name=viewport]');
-                    viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
+                    if (viewport) {
+                        viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
+                    }
+                    // Дополнительный сброс через setTimeout для iOS
+                    setTimeout(() => {
+                        window.scrollTo(0, 0);
+                        document.body.style.zoom = '1';
+                    }, 100);
                 }
 
                 document.getElementById('channelModal').style.display = 'block';
@@ -5146,10 +5153,17 @@
             
             document.getElementById('modalBody').innerHTML = content;
 
-            // Сброс масштаба для мобильных устройств
-            if (/Mobi|Android/i.test(navigator.userAgent)) {
+            // Сброс масштаба для мобильных устройств (универсальный метод)
+            if (window.innerWidth <= 768) {
                 const viewport = document.querySelector('meta[name=viewport]');
-                viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
+                if (viewport) {
+                    viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no');
+                }
+                // Дополнительный сброс через setTimeout для iOS
+                setTimeout(() => {
+                    window.scrollTo(0, 0);
+                    document.body.style.zoom = '1';
+                }, 100);
             }
 
             document.getElementById('channelModal').style.display = 'block';
